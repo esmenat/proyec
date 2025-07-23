@@ -119,6 +119,11 @@ namespace RaymiMusic.AppWeb.Controllers
 
             return View(song);
         }
+        [HttpGet]
+        public IActionResult Error ()
+        {
+            return View();
+        }
 
         [HttpPost]
         public IActionResult ToggleAleatorioAjax()

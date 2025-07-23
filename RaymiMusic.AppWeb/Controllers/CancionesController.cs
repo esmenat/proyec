@@ -2,17 +2,22 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RaymiMusic.Api.Data;
+using RaymiMusic.AppWeb.Services;
 using RaymiMusic.Modelos;       // ← contiene Cancion, Artista, Genero y RaymiMusicContext
 using System.IO;
+using System.Security.Claims;
 
 namespace RaymiMusic.AppWeb.Controllers
 {
     public class CancionesController : Controller
     {
         private readonly AppDbContext _ctx;
-
-        public CancionesController(AppDbContext ctx) => _ctx = ctx;
-
+        private readonly IPlanesService _planesService;
+        public CancionesController(AppDbContext ctx,IPlanesService planesService)
+        {
+            _ctx = ctx;
+            _planesService = planesService;
+        }
         /*------------------------------------------------------------------
          * LISTADO
          *----------------------------------------------------------------*/
@@ -206,6 +211,23 @@ namespace RaymiMusic.AppWeb.Controllers
             var cancion = await _ctx.Canciones.FindAsync(id);
             if (cancion == null)
                 return NotFound();
+
+            if (!User.Identity.IsAuthenticated)
+                return RedirectToAction("Login", "Account");
+
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null) return NotFound();
+
+            var plan = await _planesService.ObtenerPlanUsuarioAsync(Guid.Parse(userId));
+
+            if (plan?.Nombre == "Free")
+            {
+                
+                return RedirectToAction("Error", "Player", new { message = "Debes tener un plan Premium para descargar canciones." });
+
+
+
+            }
 
             // REGISTRAR DESCARGA usando la API
             using var client = new HttpClient();
