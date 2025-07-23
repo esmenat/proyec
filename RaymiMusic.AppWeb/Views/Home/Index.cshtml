@@ -1,0 +1,172 @@
+﻿@model RaymiMusic.AppWeb.Models.HomeIndexVM
+
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<h1>RaymiMusic</h1>
+
+<!-- Formulario de búsqueda -->
+<form method="get" asp-action="Index" class="mb-4">
+    <div class="input-group">
+        <input type="text" name="q" value="@Model.Query" class="form-control"
+               placeholder="Buscar canción, álbum o artista..." />
+        <button class="btn btn-primary">Buscar</button>
+    </div>
+</form>
+
+<!-- ARTISTAS DESTACADOS -->
+@if (Model.Artistas != null && Model.Artistas.Any())
+{
+    <h2 class="mb-3">Artistas Destacados</h2>
+    <div id="carouselArtistas" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            @{
+                int total = Model.Artistas.Count();
+                int itemsPerSlide = 3;
+                int index = 0;
+
+                while (index < total)
+                {
+                    string isActive = index == 0 ? "active" : "";
+                    <div class="carousel-item @isActive">
+                        <div class="d-flex justify-content-center gap-4 py-3 flex-wrap">
+                            @foreach (var artista in Model.Artistas.Skip(index).Take(itemsPerSlide))
+                            {
+                                <div class="card text-center profile-box" style="width: 16rem;">
+                                    <img src="@artista.UrlFotoPerfil"
+                                         class="rounded-circle mx-auto d-block"
+                                         style="width: 200px; height: 200px; object-fit: cover; border: 2px solid #1DB954; margin-top:15px;"
+                                         alt="Foto de @artista.NombreArtistico" />
+                                    <div class="card-body">
+                                        <h5 class="card-title">@artista.NombreArtistico</h5>
+                                        <p class="card-text text-light small">
+                                            @(string.IsNullOrEmpty(artista.Biografia)
+                                            ? "Sin biografía"
+                                            : artista.Biografia.Length > 100
+                                            ? artista.Biografia.Substring(0, 100) + "..."
+                                            : artista.Biografia)
+                                        </p>
+                                        <a href="@Url.Action("Index", "PublicPerfilArtista", new { id = artista.Id })"
+                                           class="btn btn-outline-success btn-sm">
+                                            Ver perfil
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    index += itemsPerSlide;
+                }
+            }
+        </div>
+
+        @* Flechas para navegar solo si hay más de 3 artistas *@
+        @if (Model.Artistas.Count() > 3)
+        {
+            <button class="carousel-control-prev custom-arrow-left" type="button" data-bs-target="#carouselArtistas" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon black-arrow" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next custom-arrow-right" type="button" data-bs-target="#carouselArtistas" data-bs-slide="next">
+                <span class="carousel-control-next-icon black-arrow" aria-hidden="true"></span>
+                <span class="visually-hidden">Siguiente</span>
+            </button>
+        }
+    </div>
+}
+<!-- ALBUMS -->
+@if (Model.Albums != null && Model.Albums.Any(a => a.Canciones != null && a.Canciones.Any()))
+{
+    <h2 class="mb-3 mt-5">Álbumes Recientes</h2>
+    <div id="carouselAlbums" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            @{
+                var albumsConCanciones = Model.Albums.Where(a => a.Canciones != null && a.Canciones.Any()).ToList();
+                int total = albumsConCanciones.Count();
+                int itemsPerSlide = 3;
+                int index = 0;
+
+                while (index < total)
+                {
+                    string isActive = index == 0 ? "active" : "";
+                    <div class="carousel-item @isActive">
+                        <div class="d-flex justify-content-center gap-4 py-3 flex-wrap">
+                            @foreach (var album in albumsConCanciones.Skip(index).Take(itemsPerSlide))
+                            {
+                                <div class="card text-center profile-box" style="width: 16rem;">
+                                    <!-- Actualiza la ruta de la imagen para que apunte a /media/portadas -->
+                                    <img src="@Url.Content("~/media/portadas/" + album.NombreArchivoPortada)" class="card-img-top" alt="Portada de @album.Titulo" style="height: 200px; object-fit: cover;" />
+                                    <div class="card-body">
+                                        <h5 class="card-title">@album.Titulo</h5>
+                                        <p class="card-text text-light small">
+                                            @(album.FechaLanzamiento.ToString())
+                                        </p>
+                                        <a asp-controller="Player" asp-action="Play" asp-route-id="@album.Canciones.First().Id" asp-route-returnUrl="@Context.Request.Path" asp-route-albumId="@album.Id"
+                                           class="btn btn-sm btn-primary">
+                                            ▶︎ Reproducir
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    index += itemsPerSlide;
+                }
+            }
+        </div>
+
+        @* Flechas para navegar solo si hay más de 3 álbumes con canciones *@
+        @if (albumsConCanciones.Count > 3)
+        {
+            <button class="carousel-control-prev custom-arrow-left" type="button" data-bs-target="#carouselAlbums" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon black-arrow" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next custom-arrow-right" type="button" data-bs-target="#carouselAlbums" data-bs-slide="next">
+                <span class="carousel-control-next-icon black-arrow" aria-hidden="true"></span>
+                <span class="visually-hidden">Siguiente</span>
+            </button>
+        }
+    </div>
+}
+
+<!-- CANCIONES -->
+<h2 class="mt-5">Canciones</h2>
+
+@if (!Model.Songs.Any())
+{
+    <p class="text-muted">No se encontraron canciones.</p>
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Álbum</th>
+                <th>Artista</th>
+                <th>Duración</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var s in Model.Songs)
+            {
+                <tr>
+                    <td>@s.Titulo</td>
+                    <td>@s.AlbumNombre</td>
+                    <td>@s.ArtistaNombre</td>
+                    <td>@s.Duracion.ToString(@"mm\:ss")</td>
+                    <td>
+                        <a asp-controller="Player" asp-action="Play" asp-route-id="@s.Id"
+                           data-id="@s.Id"
+                           class="btn btn-sm btn-primary" id="audioPlayer">
+                            ▶︎ Reproducir
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

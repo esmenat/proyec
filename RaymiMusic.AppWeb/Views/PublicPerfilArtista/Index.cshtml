@@ -1,0 +1,186 @@
+﻿@model Artista
+
+@{
+    ViewData["Title"] = "Perfil";
+}
+
+<style>
+    body {
+    background-color: #121212;
+    color: #ffffff;
+    font-family: 'Segoe UI', sans-serif;
+    }
+
+    .cover-photo {
+    background-size: cover;
+    background-position: center;
+    height: 250px;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+    }
+
+    .profile-box {
+    background-color: #181818;
+    border: 1px solid #282828;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+
+    .list-group-item {
+    background-color: #1e1e1e;
+    border: none;
+    color: #fff;
+    }
+
+    .list-group-item audio {
+    background-color: transparent;
+    }
+
+    .btn-follow {
+    background-color: #1DB954;
+    color: #fff;
+    border: none;
+    }
+
+    .btn-follow:hover {
+    background-color: #1aa34a;
+    }
+
+    .btn-unfollow {
+    background-color: transparent;
+    border: 1px solid #1DB954;
+    color: #1DB954;
+    }
+
+    .btn-unfollow:hover {
+    background-color: #1DB954;
+    color: #fff;
+    }
+
+    .btn-back {
+    background-color: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    }
+
+    .btn-back:hover {
+    background-color: #333;
+    }
+
+    label, p, h5, strong {
+    color: #fff;
+    }
+
+    .fw-bold {
+    font-weight: 600;
+    }
+
+</style>
+
+<!-- Portada -->
+<div class="cover-photo" style="background-image: url('@Model.UrlFotoPortada');"></div>
+
+<!-- Botón seguir -->
+<div class="container mt-3">
+    <div class="d-flex justify-content-end">
+        <form method="post" asp-action="ToggleFollow" asp-route-idArtista="@Model.Id">
+            <button type="submit" class="btn @(ViewBag.IsFollowing ? "btn-unfollow" : "btn-follow") px-4 shadow-sm">
+                @(ViewBag.IsFollowing ? "Siguiendo" : "Seguir")
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Contenido -->
+<div class="container mt-4">
+    <div class="row">
+        <!-- Perfil -->
+        <div class="col-md-6 position-relative">
+            <div class="position-absolute" style="top: -120px; left: 30px;">
+                <div style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; border: 4px solid #1DB954; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+                    @if (!string.IsNullOrEmpty(Model.UrlFotoPerfil))
+                    {
+                        <img src="@Model.UrlFotoPerfil" class="w-100 h-100" style="object-fit: cover;" />
+                    }
+                    else
+                    {
+                        <div class="bg-secondary text-white text-center d-flex align-items-center justify-content-center h-100">Sin Foto</div>
+                    }
+                </div>
+            </div>
+
+            <div class="profile-box p-4" style="margin-top: 80px;">
+                <h4 class="fw-bold mb-3">Perfil del Artista</h4>
+                <p><span class="fw-bold">Nombre Artístico:</span> @Model.NombreArtistico</p>
+                <p><span class="fw-bold">Biografía:</span> @Model.Biografia</p>
+                <p><span class="fw-bold">Cantidad de Álbumes:</span> @Model.Albumes.Count</p>
+                <p><span class="fw-bold">Cantidad de Canciones:</span> @Model.Canciones.Count</p>
+            </div>
+        </div>
+
+        <!-- Álbumes y Sencillos -->
+        <div class="col-md-6">
+            <div class="profile-box p-4 mb-4">
+                <h5 class="fw-bold text-success">Álbumes</h5>
+
+                @if (Model.Albumes.Any(a => a.Canciones.Count > 0))
+                {
+                    @foreach (var album in Model.Albumes)
+                    {
+                        if (album.Canciones.Count > 0)
+                        {
+                            <div class="mt-3">
+                                <strong>@album.Titulo</strong>
+                                <ul class="list-group list-group-flush mt-2">
+                                    @foreach (var cancion in album.Canciones)
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            @cancion.Titulo
+                                            <audio controls style="height: 30px;">
+                                                <source src="@cancion.RutaArchivo" type="audio/mpeg">
+                                            </audio>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    }
+                }
+                else
+                {
+                    <p class="text-muted">No hay álbumes disponibles.</p>
+                }
+            </div>
+
+
+            <div class="profile-box p-4">
+                <h5 class="fw-bold text-success">Sencillos</h5>
+                @if (Model.Canciones.Any(c => c.AlbumId == null))
+                {
+                    <ul class="list-group list-group-flush mt-2">
+                        @foreach (var cancion in Model.Canciones.Where(c => c.AlbumId == null))
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                @cancion.Titulo
+                                <audio controls style="height: 30px;">
+                                    <source src="@cancion.RutaArchivo" type="audio/mpeg">
+                                </audio>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted">No hay sencillos disponibles.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón volver -->
+    <div class="d-flex justify-content-start mt-4">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-back px-4 py-2">
+            ← Volver al inicio
+        </a>
+    </div>
+</div>

@@ -1,0 +1,123 @@
+﻿@model RaymiMusic.AppWeb.Models.SongDTO
+@{
+    ViewData["Title"] = "Reproductor";
+     var userPlan = ViewBag.UserPlan;  // Obtener el plan de suscripción del usuario
+}
+
+<div class="container py-5">
+    <div class="card mx-auto" style="max-width: 600px;">
+        <div class="card-body text-center">
+            <h2 class="card-title">@Model.Titulo</h2>
+            <p class="text-muted">@Model.ArtistaNombre &mdash; @Model.AlbumNombre</p>
+
+            <audio id="audioPlayer" data-id="@Model.Id" controls autoplay style="width: 100%; margin-bottom: 1rem;">
+                <source src="@Model.RutaArchivo" type="audio/mpeg" />
+                Tu navegador no soporta reproducción de audio.
+            </audio>
+
+
+            @* Mostrar anuncio después del reproductor *@
+            @if (ViewBag.Anuncio != null)
+            {
+                <div class="mb-3">
+                    <img src="@ViewBag.Anuncio" alt="Publicidad" class="img-fluid rounded" />
+                </div>
+            }
+
+            <div>
+                <a href="@ViewBag.ReturnUrl" class="btn btn-outline-secondary me-2">
+                    ← Volver
+                </a>
+    
+
+                <a asp-controller="Playlists"
+                   asp-action="AddSong"
+                   asp-route-songId="@Model.Id"
+                   class="btn btn-success">
+                    + Agregar a mi playlist
+                </a>
+                <a id="btnDescargar"
+                   class="btn btn-outline-primary"
+                   href="/Canciones/Descargar/@Model.Id">
+                    <i class="bi bi-download"></i> Descargar canción
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="d-flex justify-content-center gap-2 mt-3">
+
+    @if (ViewBag.CancionAnterior != null)
+    {
+        <a asp-controller="Player" asp-action="Play"
+           asp-route-id="@ViewBag.CancionAnterior"
+           asp-route-playlistId="@ViewBag.PlaylistId"
+           class="btn btn-outline-light">
+            ⏮ Anterior
+        </a>
+    }
+
+    @if (ViewBag.CancionSiguiente != null)
+    {
+        <a asp-controller="Player" asp-action="Play"
+           asp-route-id="@ViewBag.CancionSiguiente"
+           asp-route-playlistId="@ViewBag.PlaylistId"
+           class="btn btn-outline-light">
+            ⏭ Siguiente
+        </a>
+    }
+
+    @if (ViewBag.PlaylistId != null)
+    {
+            <button id="btnAleatorio" class="btn @(ViewBag.ModoAleatorio ? "btn-info" : "btn-outline-info")">
+                🔀 @(ViewBag.ModoAleatorio ? "Aleatorio ON" : "Aleatorio OFF")
+            </button>
+    }
+
+</div>
+@section Scripts {
+    <script src="~/js/reproductor.js"></script>
+    <script>
+        document.getElementById('btnAleatorio').addEventListener('click', function () {
+            fetch('/Player/ToggleAleatorioAjax', {
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value ?? '',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const btn = document.getElementById('btnAleatorio');
+                if (data.estado) {
+                    btn.textContent = "🔀 Aleatorio ON";
+                    btn.classList.remove("btn-outline-info");
+                    btn.classList.add("btn-info");
+                } else {
+                    btn.textContent = "🔀 Aleatorio OFF";
+                    btn.classList.remove("btn-info");
+                    btn.classList.add("btn-outline-info");
+                }
+            });
+        });
+    </script>
+}
+<script>
+    const audio = document.getElementById("player");
+
+    audio.addEventListener("ended", function () {
+        const siguiente = "@ViewBag.CancionSiguiente";
+        const playlist = "@ViewBag.PlaylistId";
+
+        if (siguiente) {
+            let url = `/Player/Play/${siguiente}`;
+            if (playlist) {
+                url += `?playlistId=${playlist}`;
+            }
+            window.location.href = url;
+        }
+    });
+</script>
+}
+
+

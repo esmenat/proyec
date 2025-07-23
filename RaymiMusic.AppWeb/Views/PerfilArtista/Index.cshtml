@@ -1,0 +1,52 @@
+﻿@model Artista
+
+@{
+    ViewData["Title"] = "Perfil";
+}
+
+<!-- Foto de Portada -->
+<div class="cover-photo" style="background-image: url('@Model.UrlFotoPortada'); background-size: cover; background-position: center; height: 250px;">
+</div>
+
+<!-- Contenedor principal -->
+<div class="container mt-5">
+    <div class="row justify-content-start">
+        <!-- Contenedor para la foto de perfil -->
+        <div class="col-12 col-md-4 text-center">
+            <!-- Foto de perfil completamente subida al norte -->
+            <div class="profile-photo" style="position: relative; top: -100px; margin-bottom: 20px; width: 220px; height: 220px; border-radius: 50%; overflow: hidden; border: 5px solid white; margin-bottom: -80px;">
+                @if (!string.IsNullOrEmpty(Model.UrlFotoPerfil))
+                {
+                    <img src="@Model.UrlFotoPerfil" alt="Foto de Perfil" style="width: 100%; height: 100%; object-fit: cover;" />
+                }
+                else
+                {
+                    <p>No hay foto de perfil disponible.</p>
+                }
+            </div>
+        </div>
+
+        <!-- Contenedor de la información del perfil -->
+        <div class="col-12 col-md-8" style="text-align: center; padding: 40px; background-color: #181818; border-radius: 15px; color: white; margin-top: 30px; margin-left: -200px;">
+            <div class="profile-info" style="border: 3px solid #ccc; padding: 30px; border-radius: 15px; font-size: 1.5rem;">
+                <!-- Nombre Artístico -->
+                <div class="mb-3">
+                    <label class="form-label" style="font-weight: bold; font-size: 2.5rem;">Nombre Artístico</label>
+                    <p style="font-size: 2rem;">@Model.NombreArtistico</p>
+                </div>
+
+                <!-- Biografía -->
+                <div class="mb-3">
+                    <label class="form-label" style="font-weight: bold; font-size: 2.5rem;">Biografía</label>
+                    <p style="font-size: 2rem;">@Model.Biografia</p>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="d-flex justify-content-center mt-5">
+                <a asp-controller="Dashboard" asp-action="Dashboard" asp-route-id="@Model.Id" class="btn btn-secondary" style="font-size: 1.5rem; margin-right: 20px;">Volver al inicio</a>
+                <a asp-controller="PerfilArtista" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary" style="font-size: 1.5rem;">Editar perfil</a>
+            </div>
+        </div>
+    </div>
+</div>

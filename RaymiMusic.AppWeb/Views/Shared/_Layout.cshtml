@@ -1,0 +1,146 @@
+﻿@using RaymiMusic.Modelos
+@using RaymiMusic.AppWeb.Models      @* Para Roles constants *@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - RaymiMusic.AppWeb</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/RaymiMusic.AppWeb.styles.css" asp-append-version="true" />
+   
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">RaymiMusic</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                    </ul>
+
+                    <ul class="navbar-nav">
+                        @if (User.Identity?.IsAuthenticated ?? false)
+                        {
+                            @* ARTISTA *@
+                            if (User.IsInRole(Roles.Artista))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Songs" asp-action="Index">Mis Canciones</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Albums" asp-action="Index">Mis Álbumes</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="PerfilArtista" asp-action="Index">Perfil</a>
+                                </li>
+                            }
+                            @* ADMIN *@
+                            else if (User.IsInRole(Roles.Admin))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Admin" asp-action="Index">Panel Admin</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Users" asp-action="Index">Usuarios</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Generos" asp-action="Index">Géneros</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Plans" asp-action="Index">Planes</a>
+                                </li>
+                            }
+                            @* USUARIO FREE O PREMIUM *@
+                            else
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="dropdownPlaylists" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Playlists
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownPlaylists">
+                                        <li><a class="dropdown-item" asp-controller="Playlists" asp-action="MisPlaylist">Ver Mis Playlists</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Playlists" asp-action="PlaylistPublicas">Ver Playlists Públicas</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="EditPerfilUsuario" asp-action="Index">Perfil</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="PlansUsuarios" asp-action="Planes">Cambiar A Un Plan</a>
+                                </li>
+                            }
+
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                    <button type="submit" class="nav-link btn btn-link p-0">Salir</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Register">Registro usuario</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="RegisterArtist">Registro artista</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">Ingresar</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="ForgotPassword">Olvidé contraseña</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+    </header>
+
+    <div class="container">
+        @* Alertas globales *@
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        else if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

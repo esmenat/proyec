@@ -1,0 +1,252 @@
+﻿@{
+    ViewData["Title"] = "Panel de Administración";
+}
+
+<!-- CSS Spotify -->
+<style>
+    :root {
+        --spotify-green: #1DB954;
+        --spotify-dark: #191414;
+        --spotify-light: #282828;
+        --spotify-text: #FFFFFF;
+    }
+
+    body {
+        background-color: var(--spotify-dark);
+        color: var(--spotify-text);
+    }
+
+    .admin-card {
+        background: var(--spotify-light);
+        border: none;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        min-height: 180px;
+    }
+
+        .admin-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(29, 185, 84, 0.1);
+        }
+
+    .stat-card {
+        background: rgba(40, 40, 40, 0.7);
+        border-left: 4px solid var(--spotify-green);
+        border-radius: 8px;
+    }
+
+    .btn-spotify {
+        background: var(--spotify-green);
+        color: #000;
+        font-weight: 600;
+        border-radius: 20px;
+        padding: 8px 20px;
+    }
+
+        .btn-spotify:hover {
+            background: #1ed760;
+        }
+
+    .section-title {
+        border-left: 4px solid var(--spotify-green);
+        padding-left: 10px;
+        margin: 25px 0 15px;
+    }
+
+    .spotify-header {
+        border-bottom: 1px solid #333;
+        padding-bottom: 15px;
+        margin-bottom: 25px;
+    }
+</style>
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="spotify-header">
+        <h2><i class="fab fa-spotify me-2"></i> @ViewData["Title"]</h2>
+    </div>
+
+    @if (User.IsInRole("admin"))
+    {
+        <!-- Estadísticas -->
+        <h4 class="section-title">Estadísticas Globales</h4>
+        <div class="row g-3 mb-4">
+            <!-- Usuarios -->
+            <div class="col-md-2 col-6">
+                <div class="stat-card p-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-users fa-2x text-muted me-3"></i>
+                        <div>
+                            <h6 class="mb-0 text-muted">USUARIOS</h6>
+                            <h3 class="mb-0">@ViewBag.TotalUsuarios</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Artistas -->
+            <div class="col-md-2 col-6">
+                <div class="stat-card p-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-microphone-alt fa-2x text-muted me-3"></i>
+                        <div>
+                            <h6 class="mb-0 text-muted">ARTISTAS</h6>
+                            <h3 class="mb-0">@ViewBag.TotalArtistas</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Álbumes -->
+            <div class="col-md-2 col-6">
+                <div class="stat-card p-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-compact-disc fa-2x text-muted me-3"></i>
+                        <div>
+                            <h6 class="mb-0 text-muted">ÁLBUMES</h6>
+                            <h3 class="mb-0">@ViewBag.TotalAlbumes</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Canciones -->
+            <div class="col-md-2 col-6">
+                <div class="stat-card p-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-music fa-2x text-muted me-3"></i>
+                        <div>
+                            <h6 class="mb-0 text-muted">CANCIONES</h6>
+                            <h3 class="mb-0">@ViewBag.TotalCanciones</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Géneros -->
+            <div class="col-md-2 col-6">
+                <div class="stat-card p-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-tags fa-2x text-muted me-3"></i>
+                        <div>
+                            <h6 class="mb-0 text-muted">GÉNEROS</h6>
+                            <h3 class="mb-0">@ViewBag.TotalGeneros</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Planes -->
+            <div class="col-md-2 col-6">
+                <div class="stat-card p-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-crown fa-2x text-muted me-3"></i>
+                        <div>
+                            <h6 class="mb-0 text-muted">PLANES</h6>
+                            <h3 class="mb-0">@ViewBag.TotalPlanes</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Módulos de Administración -->
+    <h4 class="section-title">Módulos de Administración</h4>
+    <div class="row g-4">
+        <!-- Usuarios -->
+        <div class="col-lg-4 col-md-6">
+            <div class="admin-card h-100 p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-primary bg-opacity-10 p-3 rounded me-3">
+                        <i class="fas fa-users fa-lg text-primary"></i>
+                    </div>
+                    <h5 class="mb-0">Usuarios</h5>
+                </div>
+                <p class="text-muted">Gestiona los usuarios registrados en la plataforma.</p>
+                <a href="@Url.Action("Index", "Users")" class="btn btn-sm btn-spotify mt-2">
+                    <i class="fas fa-cog me-1"></i> Administrar
+                </a>
+            </div>
+        </div>
+
+        <!-- Artistas -->
+        <div class="col-lg-4 col-md-6">
+            <div class="admin-card h-100 p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-warning bg-opacity-10 p-3 rounded me-3">
+                        <i class="fas fa-microphone-alt fa-lg text-warning"></i>
+                    </div>
+                    <h5 class="mb-0">Artistas</h5>
+                </div>
+                <p class="text-muted">Gestiona los perfiles de artistas registrados.</p>
+                <a href="@Url.Action("Index", "Artistas")" class="btn btn-sm btn-spotify mt-2">
+                    <i class="fas fa-cog me-1"></i> Administrar
+                </a>
+            </div>
+        </div>
+
+        <!-- Álbumes -->
+        <div class="col-lg-4 col-md-6">
+            <div class="admin-card h-100 p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-success bg-opacity-10 p-3 rounded me-3">
+                        <i class="fas fa-compact-disc fa-lg text-success"></i>
+                    </div>
+                    <h5 class="mb-0">Álbumes</h5>
+                </div>
+                <p class="text-muted">Gestiona todos los álbumes disponibles.</p>
+                <a href="@Url.Action("Index", "Albums")" class="btn btn-sm btn-spotify mt-2">
+                    <i class="fas fa-cog me-1"></i> Administrar
+                </a>
+            </div>
+        </div>
+
+        <!-- Canciones -->
+        <div class="col-lg-4 col-md-6">
+            <div class="admin-card h-100 p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-info bg-opacity-10 p-3 rounded me-3">
+                        <i class="fas fa-music fa-lg text-info"></i>
+                    </div>
+                    <h5 class="mb-0">Canciones</h5>
+                </div>
+                <p class="text-muted">Administra el catálogo musical completo.</p>
+                <a href="@Url.Action("Index", "Songs")" class="btn btn-sm btn-spotify mt-2">
+                    <i class="fas fa-cog me-1"></i> Administrar
+                </a>
+            </div>
+        </div>
+
+        <!-- Géneros -->
+        <div class="col-lg-4 col-md-6">
+            <div class="admin-card h-100 p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-secondary bg-opacity-10 p-3 rounded me-3">
+                        <i class="fas fa-tags fa-lg text-secondary"></i>
+                    </div>
+                    <h5 class="mb-0">Géneros</h5>
+                </div>
+                <p class="text-muted">Gestiona los géneros musicales disponibles.</p>
+                <a href="@Url.Action("Index", "Generos")" class="btn btn-sm btn-spotify mt-2">
+                    <i class="fas fa-cog me-1"></i> Administrar
+                </a>
+            </div>
+        </div>
+
+        <!-- Planes -->
+        <div class="col-lg-4 col-md-6">
+            <div class="admin-card h-100 p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-dark bg-opacity-10 p-3 rounded me-3">
+                        <i class="fas fa-crown fa-lg text-dark"></i>
+                    </div>
+                    <h5 class="mb-0">Planes</h5>
+                </div>
+                <p class="text-muted">Gestiona los planes de suscripción ofrecidos.</p>
+                <a href="@Url.Action("Index", "Plans")" class="btn btn-sm btn-spotify mt-2">
+                    <i class="fas fa-cog me-1"></i> Administrar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

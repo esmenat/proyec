@@ -1,0 +1,66 @@
+﻿@model RaymiMusic.AppWeb.Models.AlbumEditVM
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Editar álbum";
+    bool isAdmin = User.IsInRole("Admin");
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    @*IMPORTANTE *@
+    <input type="hidden" asp-for="Id" />
+
+    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+    <div class="mb-3">
+        <label asp-for="Titulo" class="form-label"></label>
+        <input asp-for="Titulo" class="form-control" />
+        <span asp-validation-for="Titulo" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="FechaLanzamiento" class="form-label"></label>
+        <input asp-for="FechaLanzamiento" type="date" class="form-control" />
+        <span asp-validation-for="FechaLanzamiento" class="text-danger"></span>
+    </div>
+
+    @if (isAdmin && Model.Artistas != null)
+    {
+        <div class="mb-3">
+            <label asp-for="ArtistaId" class="form-label">Artista</label>
+            <select asp-for="ArtistaId" asp-items="Model.Artistas" class="form-select">
+                <option value="">-- seleccionar --</option>
+            </select>
+            <span asp-validation-for="ArtistaId" class="text-danger"></span>
+        </div>
+    }
+    else
+    {
+        <input type="hidden" asp-for="ArtistaId" />
+    }
+
+    @* Mostrar imagen actual si existe *@
+    @if (!string.IsNullOrEmpty(Model.PortadaActual))
+    {
+        <div class="mb-3">
+            <label>Portada actual:</label><br />
+            <img src="/media/portadas/@Model.PortadaActual" alt="Portada actual" style="width: 180px; height: 180px; object-fit: cover; border-radius: 10px;" />
+        </div>
+    }
+
+    <div class="mb-3">
+        <label asp-for="Portada" class="form-label">Cambiar portada</label>
+        <input asp-for="Portada" type="file" accept="image/*" class="form-control" />
+        <span asp-validation-for="Portada" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancelar</a>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

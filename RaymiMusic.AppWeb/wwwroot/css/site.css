@@ -1,0 +1,227 @@
+/* Estilo global tipo Spotify oscuro */
+
+body {
+    background-color: #121212;
+    color: #ffffff;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+a {
+    color: #1DB954;
+    text-decoration: none;
+}
+
+    a:hover {
+        color: #1aa34a;
+    }
+
+/* Navbar */
+.navbar {
+    background-color: #181818 !important;
+    border-bottom: 1px solid #282828;
+}
+
+.nav-link, .navbar-brand, .navbar-text {
+    color: #fff !important;
+}
+
+    .nav-link:hover {
+        color: #1DB954 !important;
+    }
+
+/* Alertas */
+.alert-success {
+    background-color: #1DB954;
+    color: #fff;
+    border: none;
+}
+
+.alert-danger {
+    background-color: #B00020;
+    color: #fff;
+    border: none;
+}
+
+/* Botones */
+.btn, .btn-link {
+    border-radius: 5px;
+    font-weight: 600;
+}
+
+.btn-primary, .btn-success {
+    background-color: #1DB954;
+    border: none;
+}
+
+    .btn-primary:hover, .btn-success:hover {
+        background-color: #1aa34a;
+    }
+
+.btn-outline-light {
+    color: #fff;
+    border-color: #fff;
+}
+
+    .btn-outline-light:hover {
+        background-color: #fff;
+        color: #000;
+    }
+
+/* Tarjetas y contenedores */
+.profile-box, .card, .modal-content {
+    background-color: #181818;
+    border: 1px solid #282828;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+/* Listas */
+.list-group-item {
+    background-color: #1e1e1e;
+    border: none;
+    color: #fff;
+}
+
+audio {
+    background-color: transparent;
+}
+
+/* Formularios */
+input, select, textarea, .form-control {
+    background-color: #181818;
+    color: #fff;
+    border: 1px solid #333;
+}
+
+    input:focus, select:focus, textarea:focus, .form-control:focus {
+        background-color: #1e1e1e;
+        border-color: #1DB954;
+        box-shadow: 0 0 0 0.2rem rgba(29,185,84,0.25);
+    }
+
+/* Encabezados */
+h1, h2, h3, h4, h5, label, strong {
+    color: #fff;
+}
+/* Estilo para tablas en modo oscuro tipo Spotify */
+
+table.table {
+    background-color: #181818;
+    color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #282828;
+}
+
+    table.table th,
+    table.table td {
+        color: #ffffff;
+        vertical-align: middle;
+    }
+
+    table.table thead {
+        background-color: #1DB954;
+        color: #121212;
+    }
+
+table.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #1e1e1e;
+}
+
+table.table-striped tbody tr:nth-of-type(even) {
+    background-color: #181818;
+}
+
+table.table a.btn-link {
+    color: #1DB954;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+    table.table a.btn-link:hover {
+        color: #1aa34a;
+        text-decoration: underline;
+    }
+
+    table.table a.btn-link.text-danger {
+        color: #ff4c4c;
+    }
+
+        table.table a.btn-link.text-danger:hover {
+            color: #ff1f1f;
+        }
+.custom-arrow-left,
+.custom-arrow-right {
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(8px);
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+}
+
+.custom-arrow-left {
+    left: -2rem;
+}
+
+.custom-arrow-right {
+    right: -2rem;
+}
+
+.black-arrow {
+    filter: invert(1);
+}
+.table thead th, .table td {
+    color: #fff;
+}
+
+.card-title, .card-text {
+    color: #fff;
+}
+/* Input de búsqueda con estilo oscuro */
+input[type="text"],
+.form-control {
+    background-color: #181818;
+    color: #ffffff;
+    border: 1px solid #333333;
+}
+
+    input::placeholder,
+    .form-control::placeholder {
+        color: #bbbbbb; /* gris claro para el texto del placeholder */
+    }
+
+    input:focus,
+    .form-control:focus {
+        background-color: #1e1e1e;
+        color: #ffffff;
+        border-color: #1DB954;
+        box-shadow: 0 0 0 0.2rem rgba(29, 185, 84, 0.25);
+    }
+/* Selects en modo oscuro */
+select.form-select,
+select {
+    background-color: #181818;
+    color: #ffffff;
+    border: 1px solid #333333;
+}
+
+    select:focus {
+        background-color: #1e1e1e;
+        color: #ffffff;
+        border-color: #1DB954;
+        box-shadow: 0 0 0 0.2rem rgba(29, 185, 84, 0.25);
+    }
+
+option {
+    background-color: #181818;
+    color: #ffffff;
+}
+

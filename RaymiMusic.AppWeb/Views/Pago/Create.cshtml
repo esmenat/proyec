@@ -1,0 +1,63 @@
+﻿@model RaymiMusic.Modelos.Pago
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+
+@if (ViewBag.PlanSeleccionado != null)
+{
+    <div class="my-4 p-3 rounded-3" style="background-color: #181818; color: white; border-left: 5px solid #1DB954;">
+        <h5 class="mb-1">Plan seleccionado</h5>
+        <p class="mb-0" style="font-size: 1.1rem;">
+            <i class="bi bi-patch-check-fill text-success me-1"></i> @ViewBag.PlanSeleccionado
+        </p>
+    </div>
+}
+
+
+<h4>Pago</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" name="NombrePlan" value="@ViewBag.PlanSeleccionado" />
+
+            <div class="form-group">
+                <label asp-for="NumeroDeTarjeta" class="control-label"></label>
+                <input asp-for="NumeroDeTarjeta" class="form-control" />
+                <span asp-validation-for="NumeroDeTarjeta" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NombreTitular" class="control-label"></label>
+                <input asp-for="NombreTitular" class="form-control" />
+                <span asp-validation-for="NombreTitular" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CodigoSeguridad" class="control-label"></label>
+                <input asp-for="CodigoSeguridad" class="form-control" />
+                <span asp-validation-for="CodigoSeguridad" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaExpiracion" class="control-label"></label>
+                <input asp-for="FechaExpiracion" class="form-control" />
+                <span asp-validation-for="FechaExpiracion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Planes" asp-controller="PlansUsuarios">Volver atras</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

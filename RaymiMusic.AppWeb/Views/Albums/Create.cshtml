@@ -1,0 +1,60 @@
+﻿@model RaymiMusic.AppWeb.Models.AlbumCreateVM
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Nuevo álbum";
+    bool isAdmin = User.IsInRole("Admin");
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    @* 👈 necesario *@
+    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+    <!-- Título del álbum -->
+    <div class="mb-3">
+        <label asp-for="Titulo" class="form-label">Título del Álbum</label>
+        <input asp-for="Titulo" class="form-control" />
+        <span asp-validation-for="Titulo" class="text-danger"></span>
+    </div>
+
+    <!-- Fecha de lanzamiento -->
+    <div class="mb-3">
+        <label asp-for="FechaLanzamiento" class="form-label">Fecha de Lanzamiento</label>
+        <input asp-for="FechaLanzamiento" type="date" class="form-control" />
+        <span asp-validation-for="FechaLanzamiento" class="text-danger"></span>
+    </div>
+
+    <!-- Selección de artista (solo visible para admin) -->
+    @if (isAdmin && Model.Artistas != null)
+    {
+        <div class="mb-3">
+            <label asp-for="ArtistaId" class="form-label">Artista</label>
+            <select asp-for="ArtistaId" asp-items="Model.Artistas" class="form-select">
+                <option value="">-- seleccionar --</option>
+            </select>
+            <span asp-validation-for="ArtistaId" class="text-danger"></span>
+        </div>
+    }
+    else
+    {
+        <input type="hidden" asp-for="ArtistaId" value="@Model.ArtistaId" />
+    }
+
+    <!-- Subir portada -->
+    <div class="mb-3">
+        <label asp-for="Portada" class="form-label">Portada del Álbum</label>
+        <input asp-for="Portada" type="file" class="form-control" accept="image/*" />
+        <span asp-validation-for="Portada" class="text-danger"></span>
+    </div>
+
+    <!-- Botones de acción -->
+    <button type="submit" class="btn btn-success">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancelar</a>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
